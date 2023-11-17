@@ -35,17 +35,17 @@ int main(void)
 
 	I2C1_Init();
 
-	HAL_UART_Transmit(&huart2, &init_cmd, sizeof(init_cmd), HAL_MAX_DELAY);
-	delay_ms(20);
-	HAL_UART_Transmit(&huart2, start_cmd, sizeof(start_cmd), HAL_MAX_DELAY);
-	delay_ms(2000);
-	HAL_UART_Transmit(&huart2, read_all, sizeof(read_all), HAL_MAX_DELAY);
-
-	while(cnt < 11)
-		HAL_UART_Receive_IT(&huart2, &data, 1);
-
-	delay_ms(1000);
-	HAL_UART_Transmit(&huart2, stop_cmd, sizeof(stop_cmd), HAL_MAX_DELAY);
+//	HAL_UART_Transmit(&huart2, &init_cmd, sizeof(init_cmd), HAL_MAX_DELAY);
+//	delay_ms(20);
+//	HAL_UART_Transmit(&huart2, start_cmd, sizeof(start_cmd), HAL_MAX_DELAY);
+//	delay_ms(2000);
+//	HAL_UART_Transmit(&huart2, read_all, sizeof(read_all), HAL_MAX_DELAY);
+//
+//	while(cnt < 11)
+//		HAL_UART_Receive_IT(&huart2, &data, 1);
+//
+//	delay_ms(1000);
+//	HAL_UART_Transmit(&huart2, stop_cmd, sizeof(stop_cmd), HAL_MAX_DELAY);
 
 
 	sprintf(msg, "\r\n PM1 = %d ug/m3\r\n PM2.5 = %d ug/m3\r\n PM10 = %d ug/m3\r\n", value_pm25[6], value_pm25[8], value_pm25[10]);
