@@ -23,11 +23,13 @@ void HAL_MspInit(void)
 
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
-	GPIO_InitTypeDef gpio_uart2;
+	GPIO_InitTypeDef gpio_uart2, gpio_uart3;
 
 	//enable the clock
 	__HAL_RCC_USART2_CLK_ENABLE();
+	__HAL_RCC_USART3_CLK_ENABLE();
 	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 
 	//GPIO configuration for UART2
 	gpio_uart2.Alternate = GPIO_AF7_USART2;
@@ -37,6 +39,14 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 	gpio_uart2.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOA, &gpio_uart2);
 
+	//GPIO configuration for UART3
+	gpio_uart3.Alternate = GPIO_AF7_USART1;
+	gpio_uart3.Pin = GPIO_PIN_10 | GPIO_PIN_11; // PIN10 -> TX, PIN11 -> RX
+	gpio_uart3.Mode = GPIO_MODE_AF_PP;
+	gpio_uart3.Pull = GPIO_NOPULL;
+	gpio_uart3.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOB, &gpio_uart3);
+
 	//enable NVIC
 	HAL_NVIC_SetPriority(USART2_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(USART2_IRQn);
@@ -44,28 +54,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 
 }
 
-void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
-	GPIO_InitTypeDef gpio_i2c;
-
 	//enable the clock
-	__HAL_RCC_I2C1_CLK_ENABLE();
-
-	//GPIO configuration for I2C1
-	gpio_i2c.Alternate = GPIO_AF4_I2C1;
-	gpio_i2c.Pin = GPIO_PIN_6 | GPIO_PIN_7; // PIN6 -> SCL, PIN7 -> SDA
-	gpio_i2c.Mode = GPIO_MODE_AF_PP;
-	gpio_i2c.Pull = GPIO_PULLUP;
-	gpio_i2c.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOA, &gpio_i2c);
+	__HAL_RCC_TIM6_CLK_ENABLE();
 }
-
-
-
-
-
-
-
-
-
-
