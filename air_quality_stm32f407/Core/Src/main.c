@@ -53,6 +53,9 @@ int main(void)
 			Particle_sensor_values();
 			Temp_humidity_values();
 			alarm_cnt = 0;
+
+			HAL_PWR_EnterSTANDBYMode();
+
 		}
 	}
 
@@ -62,6 +65,7 @@ int main(void)
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
 	alarm_cnt++;
+
 }
 
 void RTC_AlarmConfig(void)

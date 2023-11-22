@@ -26,5 +26,6 @@ void USART2_IRQHandler(void)
 
 void RTC_Alarm_IRQHandler(void)
 {
+
 	HAL_RTC_AlarmIRQHandler(&hrtc);
 }
