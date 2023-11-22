@@ -5,7 +5,7 @@
  *      Author: admin
  */
 
-#include "main.h"
+#include <main.h>
 
 void HAL_MspInit(void)
 {
@@ -59,3 +59,46 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 	//enable the clock
 	__HAL_RCC_TIM6_CLK_ENABLE();
 }
+
+void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
+{
+	RCC_OscInitTypeDef rcc_init;
+	RCC_PeriphCLKInitTypeDef rcc_peri_init;
+
+
+	//Turn on the LSI
+	rcc_init.OscillatorType = RCC_OSCILLATORTYPE_LSI;
+	rcc_init.LSIState = RCC_LSI_ON;
+	rcc_init.PLL.PLLState = RCC_PLL_NONE;
+	HAL_RCC_OscConfig(&rcc_init);
+
+	//Select LSI as RTC clock
+	rcc_peri_init.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+	rcc_peri_init.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+	HAL_RCCEx_PeriphCLKConfig(&rcc_peri_init);
+
+	//Enable the RTC Clock
+	__HAL_RCC_RTC_ENABLE();
+
+	//Enable NVIC for Alarm
+	HAL_NVIC_SetPriority(RTC_Alarm_IRQn, 14, 0);
+	HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

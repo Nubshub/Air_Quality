@@ -6,12 +6,13 @@
  */
 
 
-#include "main.h"
+#include <main.h>
 
 UART_HandleTypeDef huart2, huart3;
 I2C_HandleTypeDef hi2c1;
 TIM_HandleTypeDef htim6;
 GPIO_InitTypeDef pd11;
+RTC_HandleTypeDef hrtc;
 
 DHT11_t dht11;
 char HUM[100], TEMP[100], CO[100];
@@ -29,7 +30,7 @@ const uint8_t read_all[5] = {0xFE, 0xA5, 0x00, 0x01, 0xA6};
 
 IH_PMC_t particle_sensor;
 uint8_t data_byte;
-uint8_t cnt = 0;
+uint8_t cnt = 0, alarm_cnt = 0;
 
 int main(void)
 {
@@ -40,14 +41,69 @@ int main(void)
 	UART2_Init();
 	UART3_Init();
 	TIM6_Init();
+	RTC_Init();
+	RTC_AlarmConfig();
 
-	Particle_sensor_values();
-	Temp_humidity_values();
 
-
-	while(1);
+	while(1)
+	{
+		if(alarm_cnt)
+		{
+			RTC_read();
+			Particle_sensor_values();
+			Temp_humidity_values();
+			alarm_cnt = 0;
+		}
+	}
 
 	return 0;
+}
+
+void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
+{
+	alarm_cnt++;
+}
+
+void RTC_AlarmConfig(void)
+{
+	RTC_AlarmTypeDef alarm_set;
+
+	memset(&alarm_set, 0 , sizeof(alarm_set));
+
+	//xx:xx:10
+	alarm_set.Alarm = RTC_ALARM_A;
+	alarm_set.AlarmTime.Seconds = 10;
+	alarm_set.AlarmMask = RTC_ALARMMASK_DATEWEEKDAY | RTC_ALARMMASK_HOURS | RTC_ALARMMASK_MINUTES;
+	alarm_set.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_NONE;
+	HAL_RTC_SetAlarm_IT(&hrtc, &alarm_set, RTC_FORMAT_BIN);
+}
+
+void RTC_read(void)
+{
+	RTC_TimeTypeDef rtc_time;
+	RTC_DateTypeDef rtc_date;
+
+	HAL_RTC_GetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
+
+	HAL_RTC_GetDate(&hrtc, &rtc_date, RTC_FORMAT_BIN);
+
+	sprintf(msg, "Time: %02d:%02d:%02d\r\n", rtc_time.Hours, rtc_time.Minutes, rtc_time.Seconds);
+	HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+
+
+}
+
+void RTC_Init(void)
+{
+	hrtc.Instance = RTC;
+	hrtc.Init.HourFormat = RTC_HOURFORMAT_12;
+	hrtc.Init.AsynchPrediv = 127;
+	hrtc.Init.SynchPrediv = 249;
+	hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+	hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_LOW;
+	hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+
+	HAL_RTC_Init(&hrtc);
 }
 
 void UART2_Init(void)
@@ -189,6 +245,8 @@ void Temp_humidity_values(void)
 
 	sprintf(TEMP, "TEMP: %d,%d C\r\n\r\n", dht11.Values.intT,dht11.Values.decT);
 	HAL_UART_Transmit(&huart3, (uint8_t*)TEMP, strlen(TEMP), HAL_MAX_DELAY);
+
+	dht11.getResult = 0;
 
 
 }

@@ -57,6 +57,10 @@ typedef union
 
 void SysClockConfig(void);
 
+void RTC_AlarmConfig(void);
+void RTC_read(void);
+void RTC_Init(void);
+
 void UART2_Init(void);
 void UART3_Init(void);
 
