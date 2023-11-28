@@ -59,7 +59,46 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
+//DHT11 values structure
+typedef union
+{
+	uint32_t getResult;
 
+	struct
+	{
+		uint8_t decT;
+		uint8_t intT;
+		uint8_t decRH;
+		uint8_t intRH;
+
+	}Values;
+
+}DHT11_t;
+
+//Particle sensor values structure
+typedef union
+{
+	uint8_t getResult[11];
+
+	struct
+	{
+		uint8_t B0;//0xFE
+		uint8_t B1;//0xFE
+		uint8_t B2;//0xA5
+		uint8_t B3;//0x02
+		uint8_t B4;//0x00
+		uint8_t B5;//DF11
+		uint8_t B6;//DF12 -> pm1.0 value
+		uint8_t B7;//DF21
+		uint8_t B8;//DF22 -> pm2.5 value
+		uint8_t B9;//DF31
+		uint8_t B10;//DF32 -> pm10 value
+		uint8_t B11;//[CS]
+
+
+	}Values;
+
+}IH_PMC_t;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
