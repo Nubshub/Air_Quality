@@ -136,6 +136,15 @@ int main(void)
 		  Particle_sensor_values();
       	  Temp_humidity_values();
       	  alarm_flag = 0;
+
+      	  sprintf(msg, "Enter sleep mode\r\n\r\n");
+      	  HAL_UART_Transmit(&huart1, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
+
+      	  HAL_SuspendTick();
+      	  HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+
+      	  sprintf(msg, "Exit sleep mode\r\n\r\n");
+      	  HAL_UART_Transmit(&huart1, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
 	  }
       /* USER CODE END WHILE */
 
@@ -435,6 +444,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
+	HAL_ResumeTick();
 	alarm_flag = 1;
 	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
 }
