@@ -58,7 +58,6 @@ extern volatile uint32_t ms;
 extern RTC_HandleTypeDef hrtc;
 extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
-
 /* USER CODE END EV */
 
 /******************************************************************************/

@@ -64,7 +64,7 @@ const uint8_t read_all[5] = {0xFE, 0xA5, 0x00, 0x01, 0xA6};
 
 IH_PMC_t particle_sensor;
 uint8_t data_byte;
-uint8_t cnt = 0, alarm_cnt = 0;
+volatile uint8_t cnt = 0, alarm_flag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -82,7 +82,8 @@ uint8_t Check_Response(void);
 void DHT11_read(void);
 void Temp_humidity_values(void);
 void Particle_sensor_values(void);
-void RTC_read(void);
+
+
 
 /* USER CODE END PFP */
 
@@ -98,7 +99,6 @@ void RTC_read(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -131,16 +131,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if(alarm_cnt)
+	  if(alarm_flag)
 	  {
-		  RTC_read();
 		  Particle_sensor_values();
-		  Temp_humidity_values();
-		  alarm_cnt = 0;
-
-		  HAL_PWR_EnterSTANDBYMode();
+      	  Temp_humidity_values();
+      	  alarm_flag = 0;
 	  }
-    /* USER CODE END WHILE */
+      /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
@@ -422,7 +419,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
 
   /*Configure GPIO pin : PB5 */
   GPIO_InitStruct.Pin = GPIO_PIN_5;
@@ -436,6 +433,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
+{
+	alarm_flag = 1;
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
+}
 void delay_us(uint32_t us)
 {
 	__HAL_TIM_SET_COUNTER(&htim17, 0); //set counter to 0
@@ -586,26 +588,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	particle_sensor.getResult[cnt++] = data_byte;
 }
 
-void RTC_read(void)
-{
-	RTC_TimeTypeDef rtc_time;
-	RTC_DateTypeDef rtc_date;
-
-	HAL_RTC_GetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
-
-	HAL_RTC_GetDate(&hrtc, &rtc_date, RTC_FORMAT_BIN);
-
-	sprintf(msg, "Time: %02d:%02d:%02d\r\n", rtc_time.Hours, rtc_time.Minutes, rtc_time.Seconds);
-	HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
-
-
-}
-
-void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
-{
-	alarm_cnt++;
-
-}
 
 /* USER CODE END 4 */
 

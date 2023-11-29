@@ -1,0 +1,77 @@
+[33mcommit 5cdafed3fba3536363f3e8523d24f49521c8dbf6[m[33m ([m[1;36mHEAD -> [m[1;32mwip[m[33m, [m[1;31morigin/wip[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Wed Nov 29 10:07:34 2023 +0100
+
+    RTC alarm and Standby mode implemented.
+
+[33mcommit 9271c9afb1e33a190fb2aec36537f674d44d685c[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Tue Nov 28 16:22:04 2023 +0100
+
+    Implemented particle, temperature and humidity sensor.
+
+[33mcommit 9edf74bd940a0b3edd6edfe0a8ef1b284c38d630[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Mon Nov 27 16:01:01 2023 +0100
+
+    New project LoRa.
+
+[33mcommit 4d72deb5448c74ae059776f738e8cf714e06f650[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Wed Nov 22 14:19:03 2023 +0100
+
+    Standby mode implemented.
+
+[33mcommit 623ef9cb5de03b2cfca4fdb397a72c2cbbc6478e[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Wed Nov 22 13:01:39 2023 +0100
+
+    RTC Alarm implemented.
+
+[33mcommit 3ba30b44f7ecccaa100f6a5e4cb9f442db01bcbd[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Tue Nov 21 11:48:18 2023 +0100
+
+    Added DHT11 sensor for temperature and humidity.
+
+[33mcommit 5c78d78a1a3f80e243154a08c181ce0b7f80da85[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Fri Nov 17 09:40:14 2023 +0100
+
+    New branch wip: first commit
+
+[33mcommit e065eccf400a6349cc8d36f077d5d5a549e26009[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Fri Nov 17 09:37:23 2023 +0100
+
+    Particle sensor with UART communication
+
+[33mcommit d21d94803ad6aa35ec251b3507d961f164668f6c[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Fri Nov 17 09:23:13 2023 +0100
+
+    UART version of particle sensor.
+
+[33mcommit bb7c3726abda7a20ac5fd360ba2d4e90ca2f7c70[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Wed Nov 15 10:06:13 2023 +0100
+
+    Test commit 2
+
+[33mcommit eb77507dc1d2af2b9fae0e14daea3c5829bf49a3[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Wed Nov 15 10:00:35 2023 +0100
+
+    Test commit
+
+[33mcommit c21cf0ec97eb34e3912f9254a024fcf8a3a5a0a9[m
+Author: Milos <milosnedeljkovic26@gmail.com>
+Date:   Wed Nov 15 09:56:33 2023 +0100
+
+    First commit
+
+[33mcommit bb0373d92649bee9a233d789366854278335100a[m
+Author: Nubshub <79905561+Nubshub@users.noreply.github.com>
+Date:   Wed Nov 15 09:35:32 2023 +0100
+
+    Initial commit
