@@ -82,6 +82,7 @@ uint8_t Check_Response(void);
 void DHT11_read(void);
 void Temp_humidity_values(void);
 void Particle_sensor_values(void);
+void RTC_read(void);
 
 /* USER CODE END PFP */
 
@@ -130,10 +131,15 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if(alarm_cnt)
+	  {
+		  RTC_read();
+		  Particle_sensor_values();
+		  Temp_humidity_values();
+		  alarm_cnt = 0;
 
-	  Temp_humidity_values();
-	  delay_ms(1000);
-	  Particle_sensor_values();
+		  HAL_PWR_EnterSTANDBYMode();
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -258,7 +264,7 @@ static void MX_RTC_Init(void)
   sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
   sAlarm.AlarmMask = RTC_ALARMMASK_DATEWEEKDAY|RTC_ALARMMASK_HOURS
                               |RTC_ALARMMASK_MINUTES;
-  sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
+  sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_NONE;
   sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
   sAlarm.AlarmDateWeekDay = 0x1;
   sAlarm.Alarm = RTC_ALARM_A;
@@ -578,6 +584,27 @@ void Particle_sensor_values(void)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	particle_sensor.getResult[cnt++] = data_byte;
+}
+
+void RTC_read(void)
+{
+	RTC_TimeTypeDef rtc_time;
+	RTC_DateTypeDef rtc_date;
+
+	HAL_RTC_GetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
+
+	HAL_RTC_GetDate(&hrtc, &rtc_date, RTC_FORMAT_BIN);
+
+	sprintf(msg, "Time: %02d:%02d:%02d\r\n", rtc_time.Hours, rtc_time.Minutes, rtc_time.Seconds);
+	HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+
+
+}
+
+void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
+{
+	alarm_cnt++;
+
 }
 
 /* USER CODE END 4 */
